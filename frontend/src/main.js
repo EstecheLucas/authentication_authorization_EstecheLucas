@@ -1,5 +1,6 @@
-import '../src/style.css'
+import '../src/style.css';
 
+//  formulario de registro
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('registro');
     
@@ -7,33 +8,31 @@ document.addEventListener('DOMContentLoaded', () => {
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             try {
-                // Obtener los valores de los campos del formulario
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
 
-            const response = await fetch('http://localhost:3000/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ username, password }),
-            });
+                const response = await fetch('http://localhost:3000/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password }),
+                });
 
-            if (response.ok) {
-                return window.location.href = '../pages/login.html';
-            }
-
-            alert('Error al registrar usuario');
+                if (response.ok) {
+                    window.location.href = '../pages/login.html';
+                } else {
+                    alert('Error al registrar usuario');
+                }
 
             } catch (error) {
-                console.error(error);
+                console.error('Error:', error);
             }
-            
         });
     }  
 });
 
-
+//formulario de inicio de sesión
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('login-form');
     
@@ -50,10 +49,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ username, password }),
-                    credentials: 'include'
                 });
 
                 if (response.ok) {
+                    const data = await response.json();
+                    // Guardar el token JWT en localStorage
+                    localStorage.setItem('token', data.token);
                     window.location.href = '../pages/index.html';
                 } else {
                     const data = await response.json();
@@ -63,93 +64,18 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (error) {
                 console.error('Error:', error);
             }
-            
         });
     }  
 });
 
+// cierre de sesión
 document.getElementById('logout').addEventListener('click', async () => {
     try {
-        const response = await fetch('http://localhost:3000/logout', {
-            method: 'POST',
-            credentials: 'include' 
-        });
+        // Eliminar el token JWT del almacenamiento
+        localStorage.removeItem('token');
 
-        if (response.ok) {
-            window.location.href = '../pages/login.html'; 
-        } else {
-            alert('Error al cerrar sesión');
-        }
+        window.location.href = '../pages/login.html'; 
     } catch (error) {
         console.error('Error:', error);
     }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// (async () => {
-//     const response = await fetch('http://localhost:3000/session', {
-//         method: 'GET',
-//         credentials: 'include' // Importante para enviar las cookies de sesión
-//     })
-
-//     console.log({ response })
-
-
-//     if (response.ok) {
-//         const data = await response.json();
-//         document.getElementById('Username').innerText = data.user.username;
-//     } else {
-//         // Redirigir al usuario a la página de inicio de sesión
-//         window.location.href = 'index.html';
-//     }
-// })();
-
-
-// Manejar el cierre de sesión
-// document.getElementById('logout').addEventListener('click', async () => {
-//     const response = await fetch('http://localhost:3000/logout', {
-//         method: 'POST',
-//         credentials: 'include'
-//     })
-    
-//     if (!response.ok) {
-//         throw new Error('Error al cerrar sesión');
-//     } else {
-//         window.location.href = 'login.html';
-//     }
-// });
