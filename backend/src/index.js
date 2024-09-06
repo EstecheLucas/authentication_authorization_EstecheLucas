@@ -36,6 +36,8 @@ app.use(session({
 }));
 
 app.post('/register', async (req, res) => {
+
+    
     try {
         const { username, password } = req.body;
         const connection = await connectionDB();
