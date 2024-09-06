@@ -1,12 +1,24 @@
-import express from 'express';
-import mysql from 'mysql2';
+import {createConnection} from "mysql2/promise.js"
 
-const app = express();
+async function connectionDB() {
+    try {
+        const connection = await createConnection({
+            host: "localhost",
+            user: "root",
+            database:"db_system"
+        })
+        return connection
+    } catch (error) {
+        console.error("ERROR AL CONECTAR A LA BASE DE DATOS", error)
+    }
+}
+
+export {connectionDB}
 
 
-// Configuración de la conexión a MySQL
-const connection = mysql.createConnection({
-host: 'localhost',  
-user: 'root',         // Tu usuario de MySQL
-database: 'db_system', // Nombre de la base de datos
-});
+
+
+
+
+
+
